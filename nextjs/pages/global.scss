@@ -78,3 +78,15 @@ img {
     transform: scale(1.0);
   }
 }
+
+.btn-primary {
+  display: inline-block;
+  padding: 6px 12px;
+  color: white;
+  background: #1890ff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-primary :hover {
+  background: #188fffb9;
+}

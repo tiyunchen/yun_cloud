@@ -1,0 +1,16 @@
+.todo {
+    width: 1200px;
+    margin: 0 auto;
+    // background: red;
+    .btnNew {
+        display: inline-block;
+        padding: 8px 12px;
+        color: white;
+        background: #1890ff;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .btnNew:hover {
+        background: #188fffb9;
+    }
+}

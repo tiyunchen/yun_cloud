@@ -1,6 +1,7 @@
-import React, {useMemo, useEffect} from 'react'
-let editor = null
-export default function Editor({elId, onchange, placeholder}){
+import React, {useMemo, useEffect,  useState} from 'react'
+
+export default function Editor({elId, onchange, placeholder, disable, content}){
+    const [editor, setEditor] = useState(null)
     const MEMO = useMemo(()=>{
         if(typeof window !== 'undefined'){
             return window
@@ -25,11 +26,22 @@ export default function Editor({elId, onchange, placeholder}){
                 onchange && onchange(newHtml)
                 // console.log('change 之后最新的 html', newHtml)
             }
+            setEditor(editor)
+            content && editor.txt.html(content)
         })()
         return () => {
             editor && editor.destroy()
-            editor = null
+            setEditor(null)
         }
     }, [MEMO])
-    return <div id={elId}></div>
+
+    useEffect(()=>{
+        if(!editor) return
+        if(disable){
+            editor.disable()
+        } else {
+            editor.enable()
+        }
+    }, [disable])
+    return <div id={elId} />
 }

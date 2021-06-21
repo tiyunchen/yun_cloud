@@ -87,6 +87,17 @@ img {
   border-radius: 4px;
   cursor: pointer;
 }
+
+.btn-cancel {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #1890ff;
+  border: 1px solid #1890ff;
+}
+
+
 .btn-primary :hover {
   background: #188fffb9;
 }
@@ -102,4 +113,17 @@ img {
 }
 .mb-8 {
   margin-bottom: 8px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+.mr-16 {
+  margin-right: 16px;
+}
+.ml-16 {
+  margin-left: 16px;
+}
+.mb-16 {
+  margin-bottom: 16px;
 }

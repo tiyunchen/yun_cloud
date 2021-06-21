@@ -1,6 +1,7 @@
 .todo {
-    width: 1200px;
+    //width: 1200px;
     margin: 0 auto;
+    padding: 20px;
     // background: red;
     .btnNew {
         display: inline-block;
@@ -12,5 +13,12 @@
     }
     .btnNew:hover {
         background: #188fffb9;
+    }
+
+    .todoListItem {
+        //padding: 0 20px;
+        border-bottom: 1px solid rgba(138, 138, 138, 0.44);
+
+
     }
 }

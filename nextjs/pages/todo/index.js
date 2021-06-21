@@ -17,10 +17,7 @@ export default function Todo(){
      * 获取todo 清单
      */
     const getTodoList = () =>{
-        const stringList = localStorage.getItem('todoList')
-        const todoList  = stringList ? JSON.parse(stringList) : []
-        setList(todoList)
-
+        setList(getStore())
     }
 
     /**
@@ -36,12 +33,12 @@ export default function Todo(){
             children: []
         }
 
-        const stringList = localStorage.getItem('todoList')
-        const todoList  = stringList ? JSON.parse(stringList) : []
+
+        const todoList  = getStore()
         todoList.unshift(temp)
         toggleCreate(false)
         setContent(todoList)
-        localStorage.setItem('todoList', JSON.stringify(todoList))
+        saveStore(todoList)
         getTodoList()
     }
 
@@ -50,10 +47,37 @@ export default function Todo(){
      * @param e
      */
     const deleteTodo = (e)=>{
-        const stringList = JSON.parse(localStorage.getItem('todoList'))
+        const stringList = getStore()
         const newData = stringList.filter(item=>item._id !== e._id)
         setList(newData)
-        localStorage.setItem('todoList', JSON.stringify(newData))
+
+    }
+
+    const saveStore = (data=[], key='todoList') => {
+        localStorage.setItem(key, JSON.stringify(data))
+    }
+
+    const getStore = (key='todoList', defaultValue=[]) => {
+        const stringData = localStorage.getItem(key)
+        const data  = stringData ? JSON.parse(stringData) : defaultValue
+        return data
+    }
+
+    /**
+     * 保存数据
+     * @param item
+     */
+    const onUpdate = (item) => {
+        const newData = todoList.map(todo => {
+            if(item._id === todo._id){
+                return item
+            } else {
+                return todo
+            }
+        })
+        setList(newData)
+        saveStore(newData)
+
     }
      // memo缓存，修改其他状态时，不会重新渲染
 
@@ -68,7 +92,11 @@ export default function Todo(){
         }
 
         <div className="todo-list">
-            {todoList.map(e=>(<TodoItem item={e} onDelete={deleteTodo} />))}
+            {todoList.map(e=>(<TodoItem item={e}
+                                        onDelete={deleteTodo}
+                                        onUpdate={onUpdate}
+                                        key={e._id}
+            />))}
         </div>
         
     </div>

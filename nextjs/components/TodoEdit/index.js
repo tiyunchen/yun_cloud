@@ -2,8 +2,8 @@ import Editor from '../../components/Editor/index'
 import {useState, useRef} from 'react'
 import styles from './edit.module.scss'
 
-export default function TodoEdit({onSave= ()=>{}, onCancel=()=>{}}){
-    const [data, setContent] = useState(data)
+export default function TodoEdit({onSave= ()=>{}, onCancel=()=>{}, content='', elId}){
+    const [data, setContent] = useState(content)
     const [preview, setPreview] = useState(false)
     const contentChange = (data) => {
         setContent(data)
@@ -20,7 +20,7 @@ export default function TodoEdit({onSave= ()=>{}, onCancel=()=>{}}){
             preview ? <div dangerouslySetInnerHTML={{__html: data}} />
                 :
                 <Editor placeholder={'请输入标题'}
-                        elId={'todo-editor'}
+                        elId={elId || 'todo-editor'}
                         onchange={contentChange}
                         disable={preview}
                         content={data}

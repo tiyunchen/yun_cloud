@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo} from 'react'
 import TodoEdit from "../../components/TodoEdit";
+import TodoItem from "../../components/TodoItem";
 import {uuid} from '../../utils/index'
 import styles from './todo.module.scss'
+import { generateIconfont, generateIconSvg } from '../../utils/index'
 
 export default function Todo(){
     const [isCreate, toggleCreate] = useState(false)
@@ -36,17 +38,28 @@ export default function Todo(){
 
         const stringList = localStorage.getItem('todoList')
         const todoList  = stringList ? JSON.parse(stringList) : []
-        todoList.push(temp)
+        todoList.unshift(temp)
         toggleCreate(false)
         setContent(todoList)
         localStorage.setItem('todoList', JSON.stringify(todoList))
         getTodoList()
     }
+
+    /**
+     * 删除todo
+     * @param e
+     */
+    const deleteTodo = (e)=>{
+        const stringList = JSON.parse(localStorage.getItem('todoList'))
+        const newData = stringList.filter(item=>item._id !== e._id)
+        setList(newData)
+        localStorage.setItem('todoList', JSON.stringify(newData))
+    }
      // memo缓存，修改其他状态时，不会重新渲染
 
     console.log('todoList', todoList)
     return <div className={styles.todo}>
-        <h1>欢迎来到 todo 功能，请更新你的todo list</h1>
+        <h1>{generateIconSvg('icon-daiban')}<span className="ml-8">欢迎使用 todo 功能</span></h1>
         <div className="btn-primary mb-8" onClick={()=>toggleCreate(!isCreate)}>
             {isCreate ? '收起' : '新建todo'}
         </div>
@@ -55,9 +68,7 @@ export default function Todo(){
         }
 
         <div className="todo-list">
-            {todoList.map(e=>(<div key={e._id}  className={styles.todoListItem}>
-                <div dangerouslySetInnerHTML={{__html: e.content}}/>
-            </div>))}
+            {todoList.map(e=>(<TodoItem item={e} onDelete={deleteTodo} />))}
         </div>
         
     </div>

@@ -40,6 +40,11 @@ export default function TodoItem(
 
     }
 
+    const checkBoxChange = (e) => {
+        console.log('ad', e.target.checked)
+        onUpdate({...item, finish: e.target.checked})
+    }
+
 
     return <div key={item._id} className={styles.todoListItem}>
         {isEdit ? <div className="mb-16">
@@ -48,14 +53,22 @@ export default function TodoItem(
                     onSave={onSave}
                     onCancel={()=>toggleEdit(false)}
             />
-        </div> : <div>
+        </div> : <div className={styles.todoListItemWrap}>
+            <div>
+                <input type="checkbox"
+                       checked={item.finish}
+                       onChange={(e)=>checkBoxChange(e)} />
+                <div dangerouslySetInnerHTML={{__html: item.content}}
+                     className={item.finish ? styles.todoListItemFinish : styles.todoListItemContent} />
+            </div>
+            
             <span className={styles.edit}>
                     <span className="mr-8" onClick={() => deleteTodo(item)}>
                         {generateIconSvg('icon-shanchu')}
                     </span>
                     <span onClick={() => onEdit(item)}>{generateIconSvg('icon-A')}</span>
                 </span>
-            <div dangerouslySetInnerHTML={{__html: item.content}}/>
+            
         </div>}
 
     </div>

@@ -50,6 +50,7 @@ export default function Todo(){
         const stringList = getStore()
         const newData = stringList.filter(item=>item._id !== e._id)
         setList(newData)
+        saveStore(newData)
 
     }
 

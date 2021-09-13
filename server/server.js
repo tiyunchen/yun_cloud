@@ -1,5 +1,6 @@
 const http = require('http')
 const fs = require('fs')
+const archiver = require('archiver')
 const {date} = require("mockjs/src/mock/random/date");
 
 const server = http.createServer((req, res)=>{

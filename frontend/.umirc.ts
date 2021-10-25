@@ -4,6 +4,7 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
+  favicon: '/logo.png',
   routes: [
     { path: '/', component: '@/pages/index' },
     {

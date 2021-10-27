@@ -4,7 +4,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const expressJwt = require('express-jwt');
-const cors = require('cors');
 
 const routers = require('./routes/index');
 const db = require('./utils/db');
@@ -33,7 +32,6 @@ app.use(expressJwt({
 }).unless({
   path: config.jwtUnless,
 }));
-// app.use(loginVerify)
 
 app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

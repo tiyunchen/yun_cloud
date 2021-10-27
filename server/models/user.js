@@ -5,10 +5,12 @@ const Base = require('./base');
 
 const userSchema = new Schema({
   username: String,
+  password: String,
   email: String,
   sex: String,
   age: Number,
-});
+  token: String,
+}, {versionKey: false});
 
 class UserModel extends Base {
   constructor() {

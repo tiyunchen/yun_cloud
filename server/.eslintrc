@@ -22,6 +22,7 @@
   "rules": {
     "no-console": 0,
     "no-secrets/no-secrets": "error",
+    "no-underscore-dangle": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

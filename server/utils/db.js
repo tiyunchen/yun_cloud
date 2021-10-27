@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('../models/user');
 
 function connect() {
   const mongoDBurl = 'mongodb://localhost:27017/yun_cloud';

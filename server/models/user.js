@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 const Base = require('./base');
 
 const userSchema = new Schema({
@@ -10,7 +10,7 @@ const userSchema = new Schema({
   sex: String,
   age: Number,
   token: String,
-}, {versionKey: false});
+}, { versionKey: false });
 
 class UserModel extends Base {
   constructor() {

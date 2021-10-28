@@ -1,24 +1,25 @@
 import { defineConfig } from 'umi';
+import routers from "./config/routers";
 
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
   favicon: '/logo.png',
-  routes: [
-    { path: '/', component: '@/pages/index' },
-    {
-      path: '/user', component: '@/pages/user',
-      routes: [
-        {
-          path: '/user/login', component: '@/pages/user/login',exact: true,
-        }
-      ]
-    },
-  ],
+  routes: routers,
   fastRefresh: {},
   antd: {
     dark: false,
     compact: true,
+  },
+  theme: {
+    'border-radius-base': '4px',
+  },
+  proxy: {
+    '/api': {
+      'target': 'http://localhost:3000',
+      'changeOrigin': true,
+      'pathRewrite': { '^/api' : '' },
+    },
   },
 });

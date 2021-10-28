@@ -1,6 +1,5 @@
 import styles from './index.less';
 
-// import '../utils/serviceWoker.js'
 export default function IndexPage() {
   return (
     <div>

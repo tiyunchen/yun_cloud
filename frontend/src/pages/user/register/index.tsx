@@ -2,15 +2,10 @@ import {useEffect} from 'react'
 import {RoutePageProps, LoginProps} from '@/utils/types'
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import userService from '@/apis/user'
 import './index.less'
 
-const  LoginPage = (props: RoutePageProps) => {
-  useEffect(()=>{
-    userService.loginApi({username: 'chentiyun', password: '1234562'}).then(res=>{
-      console.log('111', res)
-    })
-  }, [])
+const  RegisterPage = (props: RoutePageProps) => {
+
   const onFinish = (values:LoginProps) => {
     console.log('Received values of form: ', values);
   };
@@ -63,5 +58,5 @@ const  LoginPage = (props: RoutePageProps) => {
   );
 };
 
-export default LoginPage
+export default RegisterPage
 

@@ -1,5 +1,6 @@
 import {useEffect} from 'react'
 import {RoutePageProps, LoginProps} from '@/utils/types'
+import {Link} from 'umi'
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './index.less'
@@ -50,9 +51,9 @@ const  RegisterPage = (props: RoutePageProps) => {
 
       <Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
-          登入
+          注册
         </Button>
-        &nbsp;&nbsp;或者 <a href="">立即注册</a>
+        &nbsp;&nbsp;或者 <Link to={'/user/login'}>登入</Link>
       </Form.Item>
     </Form>
   );

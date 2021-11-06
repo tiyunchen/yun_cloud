@@ -1,5 +1,5 @@
 // import { History, Location } from 'history-with-query'
-import {IRouteProps, History, Location} from 'umi'
+import type {IRouteProps, History, Location} from 'umi'
 
 export interface RoutePageProps {
   history: History,
@@ -15,4 +15,9 @@ export interface LoginProps {
   password: string,
   confirmPassword?: string,
   checked?: boolean,
+}
+
+export interface HttpResponseProps<T> {
+  result: boolean,
+  data: T
 }

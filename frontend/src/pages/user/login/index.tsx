@@ -1,19 +1,34 @@
-import {useEffect} from 'react'
-import {RoutePageProps, LoginProps} from '@/utils/types'
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import React, {useEffect} from 'react'
+import type {HttpResponseProps, LoginProps} from '@/utils/types'
+import { Form, Input, Button} from 'antd'
+import {connect, Link} from 'umi'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import userService from '@/apis/user'
 import './index.less'
+import type { IndexModelState, ConnectProps, UserInfoProps} from 'umi'
 
-const  LoginPage = (props: RoutePageProps) => {
+interface LoginPageProps extends ConnectProps {
+  app: IndexModelState
+}
+
+const  LoginPage: React.FC<LoginPageProps> = (props)  => {
   useEffect(()=>{
-    userService.loginApi({username: 'chentiyun', password: '1234562'}).then(res=>{
-      console.log('111', res)
-    })
+
   }, [])
-  const onFinish = (values:LoginProps) => {
-    console.log('Received values of form: ', values);
-  };
+  const onFinish = (values: LoginProps) => {
+    userService.loginApi({username: values.username, password: values.password}).then((res: HttpResponseProps<UserInfoProps>)=>{
+      if(res.result){
+        props.dispatch && props.dispatch({
+          type: 'app/save',
+          payload: {
+            userInfo: res.data
+          }
+        })
+        props.history.push('/')
+      }
+    })
+  }
+  console.log('props', props)
 
   return (
     <Form
@@ -57,11 +72,16 @@ const  LoginPage = (props: RoutePageProps) => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           登入
         </Button>
-        &nbsp;&nbsp;或者 <a href="">立即注册</a>
+        &nbsp;&nbsp;或者 <Link to={'register'}>立即注册</Link>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default LoginPage
+
+export default connect(
+  ({ app }: { app: IndexModelState; }) => ({
+    app,
+  }),
+)(LoginPage)
 

@@ -1,6 +1,7 @@
 import Mock from 'mockjs'
 import {request} from 'umi'
 import {LoginProps} from '@/utils/types'
+import yunRequest from '@/utils/request'
 
 function getUsername(): Promise<string> {
   return new Promise((resolve) => {
@@ -11,7 +12,7 @@ function getUsername(): Promise<string> {
 }
 
 function loginApi(payload: LoginProps):Promise<object>{
-  return request('/api/user/login', {
+  return yunRequest('/api/user/login', {
     method: 'post',
     data: payload,
   })

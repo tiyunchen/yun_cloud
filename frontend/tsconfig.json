@@ -21,6 +21,7 @@
     "src/**/*",
     "config/**/*",
     ".umirc.ts",
+    ".eslintrc.js",
     "typings.d.ts"
   ],
   "exclude": [

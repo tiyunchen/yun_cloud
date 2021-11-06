@@ -26,13 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // token 验证
 
-app.use(expressJwt({
-  secret: config.jwtSecret,
-  algorithms: ['HS256'],
-}).unless({
-  path: config.jwtUnless,
-}));
-
 app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
@@ -44,6 +37,12 @@ app.all('*', (req, res, next) => {
 app.use(model);
 
 app.use('/', routers);
+app.use(expressJwt({
+  secret: config.jwtSecret,
+  algorithms: ['HS256'],
+}).unless({
+  path: config.jwtUnless,
+}));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

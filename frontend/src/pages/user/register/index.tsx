@@ -1,14 +1,31 @@
-import {useEffect} from 'react'
-import {RoutePageProps, LoginProps} from '@/utils/types'
 import {Link} from 'umi'
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import type {RoutePageProps, LoginProps} from '@/utils/types'
+import { Form, Input, Button, message } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import userService from '@/apis/user'
 import './index.less'
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 
 const  RegisterPage = (props: RoutePageProps) => {
-
-  const onFinish = (values:LoginProps) => {
-    console.log('Received values of form: ', values);
+  const onFinish = async (values: LoginProps) => {
+    if(values.confirmPassword !== values.password){
+      message.error('两次密码不正确')
+      return
+    }
+    delete values.confirmPassword
+    const res = await userService.registerApi(values)
+    if(res.result){
+      message.success('注册成功')
+      props.history.push('/user/login')
+    }
+    console.log('Received values of form: ', values, res);
   };
 
   return (
@@ -19,6 +36,7 @@ const  RegisterPage = (props: RoutePageProps) => {
         remember: true,
       }}
       onFinish={onFinish}
+      {...layout}
     >
       <Form.Item
         name="username"
@@ -45,11 +63,42 @@ const  RegisterPage = (props: RoutePageProps) => {
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Password"
+          placeholder="请输入密码"
         />
       </Form.Item>
-
-      <Form.Item>
+      <Form.Item
+        name="confirmPassword"
+        label={'确认密码'}
+        rules={[
+          {
+            required: true,
+            message: '请输入密码',
+          },
+        ]}
+      >
+        <Input
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="请再次输入密码"
+        />
+      </Form.Item>
+      <Form.Item
+        name="email"
+        label={'邮箱'}
+        rules={[
+          {
+            required: true,
+            message: '请输入邮箱',
+          },
+        ]}
+      >
+        <Input
+          prefix={<MailOutlined />}
+          type="email"
+          placeholder="请输入邮箱"
+        />
+      </Form.Item>
+      <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit" className="login-form-button">
           注册
         </Button>

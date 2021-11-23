@@ -1,4 +1,5 @@
 import type { Effect, Reducer, Subscription} from 'umi'
+import userService from '@/apis/user'
 // import { ImmerReducer } from 'umi'
 
 export interface UserInfoProps {
@@ -18,6 +19,7 @@ export interface IndexModelType {
   state: IndexModelState;
   effects: {
     query: Effect;
+    refreshToken: Effect
   };
   reducers: {
     save: Reducer<IndexModelState>;
@@ -37,6 +39,12 @@ const IndexModel: IndexModelType = {
 
   effects: {
     *query({ payload }, { call, put }) {},
+
+    // 刷新用户状态
+    *refreshToken({  }, {call, put}){
+      const res = yield call(userService.refreshTokenApi)
+      console.log('刷新用户状态',res)
+    }
   },
   reducers: {
     save(state, action) {
@@ -51,15 +59,20 @@ const IndexModel: IndexModelType = {
     // },
   },
   subscriptions: {
-    setup() {
-      // return history.listen(({ pathname }: {pathname: string}) => {
-      //   // console.log('pathname', pathname)
-      //   // if (pathname === '/') {
-      //   //   dispatch({
-      //   //     type: 'query',
-      //   //   })
-      //   // }
-      // })
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        console.log('pathname', pathname)
+        if(!pathname.startsWith('/user')){
+          dispatch({
+            type: 'refreshToken',
+          })
+        }
+
+        // console.log('pathname', pathname)
+        // if (pathname === '/') {
+
+        // }
+      })
     },
   },
 }

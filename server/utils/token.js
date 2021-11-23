@@ -13,7 +13,7 @@ const generateToken = (user) => new Promise((resolve, reject) => {
 
 const getToken = (token) => new Promise((resolve, reject) => {
   if (!token) {
-    reject({ error: 'token是空的' });
+    resolve({});
   } else {
     const info = jwt.verify(token.split(' ')[1], jwtSecret);
     // console.log('token=', info);

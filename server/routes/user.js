@@ -1,14 +1,14 @@
 const express = require('express');
-const {body, param} = require('express-validator');
+const { body, param } = require('express-validator');
 const userService = require('../service/service');
 const validate = require('../middleware/validate');
-const {getToken} = require('../utils/token');
+const { getToken } = require('../utils/token');
 
 const userRouter = express.Router();
 
 /* GET users listing. */
 userRouter.get('/', (req, res, next) => {
-  res.send({result: true});
+  res.send({ result: true });
 });
 
 /**
@@ -21,11 +21,11 @@ userRouter.post('/login',
   async (req, res) => {
     const data = await req.$models.User.model.findOne(req.body);
     if (!data) {
-      res.send({result: false, msg: '用户名或密码不一致'});
+      res.status(200).send({ result: false, msg: '用户名或密码不一致' });
     } else {
       delete data.password;
       await userService.setToken(req, res, data);
-      res.send({result: true, data});
+      res.send({ result: true, data });
     }
   });
 
@@ -34,14 +34,18 @@ userRouter.post('/login',
  */
 userRouter.post('/refresh_token', async (req, res) => {
   const token = await getToken(req.headers.authorization);
-  const user = await req.$models.User.model.findOne({_id: token._id});
-  // 如果token 和数据库存储的token不一致用户需要从新登入，这样可以手动提用户下线，或者只能维持单点登入
-  if (user.token !== token) {
-    return res.status(401).send({msg: '登入失效'});
+  const user = await req.$models.User.model.findOne({ _id: token._id });
+  if (!user) {
+    return res.status(401).send({ msg: '登入失效' });
   }
-  console.log('token', token, token._id);
+  const userToken = await getToken(` ${user.token}`);
+
+  // 如果token 和数据库存储的token不一致用户需要从新登入，这样可以手动提用户下线，或者只能维持单点登入
+  if (userToken._id !== token._id) {
+    return res.status(401).send({ msg: '登入失效' });
+  }
   await userService.setToken(req, res, user);
-  res.send({result: true});
+  res.send({ result: true });
 });
 
 /**
@@ -54,10 +58,10 @@ userRouter.put('/register',
   validate,
   async (req, res) => {
     const usernameRepeat = await userService.checkNameExit(req, req.body.username);
-    if (usernameRepeat) return res.status(500).send({msg: '用户名已存在'});
+    if (usernameRepeat) return res.status(500).send({ msg: '用户名已存在' });
     const data = await req.$models.User.create(req.body);
     console.log('注册成功', data);
-    res.send({result: true, data});
+    res.send({ result: true, data });
   });
 
 /**
@@ -65,8 +69,8 @@ userRouter.put('/register',
  */
 userRouter.get('/check_name_exist', param('username'), validate, async (req, res) => {
   const usernameRepeat = await userService.checkNameExit(req, req.body.username);
-  if (usernameRepeat) return res.send({msg: '用户名已存在', result: false});
-  res.send({result: true});
+  if (usernameRepeat) return res.send({ msg: '用户名已存在', result: false });
+  res.send({ result: true });
 });
 
 module.exports = userRouter;

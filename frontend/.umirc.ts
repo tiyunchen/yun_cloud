@@ -1,4 +1,4 @@
-import { defineConfig } from 'umi';
+import { defineConfig, RequestConfig } from 'umi';
 import routers from "./config/routers";
 
 export default defineConfig({

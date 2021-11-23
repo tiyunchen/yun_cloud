@@ -5,20 +5,34 @@ import {connect, Link} from 'umi'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import userService from '@/apis/user'
 import './index.less'
-import type { IndexModelState, ConnectProps, UserInfoProps} from 'umi'
+import type { IndexModelState, ConnectProps, UserInfoProps, Dispatch} from 'umi'
 
-interface LoginPageProps extends ConnectProps {
-  app: IndexModelState
+interface LoginPageProps extends ConnectProps  {
+  app: IndexModelState,
+  dispatch: Dispatch
 }
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 
 const  LoginPage: React.FC<LoginPageProps> = (props)  => {
   useEffect(()=>{
 
   }, [])
   const onFinish = (values: LoginProps) => {
-    userService.loginApi({username: values.username, password: values.password}).then((res: HttpResponseProps<UserInfoProps>)=>{
+    userService.loginApi(
+      {username: values.username, password: values.password},
+      {
+        showLoading: true
+      }
+    ).then((res: HttpResponseProps<UserInfoProps>)=>{
       if(res.result){
-        props.dispatch && props.dispatch({
+        props.dispatch({
           type: 'app/save',
           payload: {
             userInfo: res.data
@@ -26,6 +40,8 @@ const  LoginPage: React.FC<LoginPageProps> = (props)  => {
         })
         props.history.push('/')
       }
+    }).catch(err=>{
+      console.log('err', err)
     })
   }
   console.log('props', props)
@@ -38,6 +54,9 @@ const  LoginPage: React.FC<LoginPageProps> = (props)  => {
         remember: true,
       }}
       onFinish={onFinish}
+      {
+        ...layout
+      }
     >
       <Form.Item
         name="username"
@@ -48,6 +67,7 @@ const  LoginPage: React.FC<LoginPageProps> = (props)  => {
             message: '请输入用户名',
           },
         ]}
+        {...layout}
       >
         <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
       </Form.Item>
@@ -68,7 +88,7 @@ const  LoginPage: React.FC<LoginPageProps> = (props)  => {
         />
       </Form.Item>
 
-      <Form.Item>
+      <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit" className="login-form-button">
           登入
         </Button>

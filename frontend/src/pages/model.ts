@@ -36,11 +36,10 @@ const IndexModel: IndexModelType = {
   },
 
   effects: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     *query({ payload }, { call, put }) {},
   },
   reducers: {
-    save(state: IndexModelState, action) {
+    save(state, action) {
       return {
         ...state,
         ...action.payload,

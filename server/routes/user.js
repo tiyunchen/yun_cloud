@@ -45,7 +45,7 @@ userRouter.post('/refresh_token', async (req, res) => {
     return res.status(401).send({ msg: '登入失效' });
   }
   await userService.setToken(req, res, user);
-  res.send({ result: true });
+  res.send({ result: true, data: user });
 });
 
 /**

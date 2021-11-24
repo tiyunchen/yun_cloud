@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect, Link} from 'umi'
+import {connect, Link, NavLink} from 'umi'
 import type { IndexModelState, ConnectProps, Dispatch} from 'umi'
 import './index.less'
 
@@ -24,25 +24,65 @@ const featureItems = [
   }
 ]
 
+const unLoginList = [
+  {
+    content: '登录',
+    key: 'login',
+    show: true,
+    link: '/user/login'
+  },
+  {
+    content: '注册',
+    key: 'register',
+    show: true,
+    link: '/user/register'
+  }
+]
+
 
 
 const Nav: React.FC<NavProps> = (props) => (
   <nav className="home-nav">
     <ul className="home-nav-items">
       {
-        featureItems.map(item=><li key={item.key}><Link to={item.link}>{item.content}</Link></li>)
+        featureItems.map(item=>(
+          <li
+            key={item.key}
+            className="home-nav-items-item"
+          >
+            <NavLink
+              to={item.link}
+              activeClassName="home-nav-items-item-active"
+              className="home-nav-items-item-default"
+              exact={true}
+            >{item.content}</NavLink>
+          </li>
+        ))
       }
 
     </ul>
     {
       !!props.app.userInfo?.username ? (
-        <ul>
-          <li>我的</li>
+        <ul className="home-nav-items">
+          <li className="home-nav-items-item">我的</li>
         </ul>
       ) : (
         <ul className="home-nav-items">
-          <li><Link to={'/user/login'}>登入</Link></li>
-          <li><Link to={'/user/register'}>注册</Link></li>
+          {
+            unLoginList.map(item=>(
+              <li
+                key={item.key}
+                className="home-nav-items-item"
+              >
+                <NavLink
+                  to={item.link}
+                  activeClassName="home-nav-items-item-active"
+                  className="home-nav-items-item-default"
+                  exact={true}
+                >{item.content}</NavLink>
+              </li>
+            ))
+          }
         </ul>
       )
     }

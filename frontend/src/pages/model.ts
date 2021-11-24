@@ -44,6 +44,12 @@ const IndexModel: IndexModelType = {
     *refreshToken({  }, {call, put}){
       const res = yield call(userService.refreshTokenApi)
       console.log('刷新用户状态',res)
+      yield put({
+        type: 'save',
+        payload: {
+          userInfo: res.result ? res.data : {}
+        }
+      })
     }
   },
   reducers: {

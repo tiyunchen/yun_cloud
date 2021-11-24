@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react'
 import type {HttpResponseProps, LoginProps} from '@/utils/types'
+import type { IndexModelState, ConnectProps, UserInfoProps, Dispatch} from 'umi'
 import { Form, Input, Button} from 'antd'
 import {connect, Link} from 'umi'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import userService from '@/apis/user'
 import './index.less'
-import type { IndexModelState, ConnectProps, UserInfoProps, Dispatch} from 'umi'
 
 interface LoginPageProps extends ConnectProps  {
   app: IndexModelState,

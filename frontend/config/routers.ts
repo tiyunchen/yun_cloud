@@ -1,20 +1,23 @@
+import allPath from './path'
+
 export default [
   {
-    path: '/',
+    path: allPath.home.url,
     component: '@/pages/index',
     title: '探索世界',
     routes: [
       {
-        path: '/user', component: '@/pages/user',
+        path: '/user',
+        component: '@/pages/user',
         routes: [
           {
-            path: '/user/login',
+            path: allPath.login.url,
             component: '@/pages/user/login',
             exact: true,
             title: '用户登入'
           },
           {
-            path: '/user/register',
+            path: allPath.register.url,
             component: '@/pages/user/register',
             title: '用户注册',
             exact: true,
@@ -22,9 +25,14 @@ export default [
         ]
       },
       {
-        path: '/todo-list',
+        path: allPath.todoList.url,
         component: '@/pages/todo',
         title: '欢迎来到待办'
+      },
+      {
+        path: allPath.xmind.url,
+        // component: '@/pages/todo',
+        title: '欢迎来到思维导图'
       }
     ]
   },

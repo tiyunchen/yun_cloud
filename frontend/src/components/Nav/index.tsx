@@ -1,9 +1,11 @@
 import React from 'react';
-import {connect, Link, NavLink} from 'umi'
-import type { IndexModelState, ConnectProps, Dispatch} from 'umi'
+import type {ConnectProps, Dispatch, IndexModelState} from 'umi'
+import {connect, NavLink} from 'umi'
+// @ts-ignore
+import allPath from '/config/path'
 import './index.less'
 
-interface NavProps extends ConnectProps  {
+interface NavProps extends ConnectProps {
   app: IndexModelState,
   dispatch: Dispatch
 }
@@ -14,13 +16,19 @@ const featureItems = [
     content: '首页',
     key: 'home',
     show: true,
-    link: '/'
+    link: allPath.home.url
   },
   {
     content: '待办',
     key: 'todo-list',
     show: true,
-    link: '/todo-list'
+    link: allPath.todoList.url
+  },
+  {
+    content: '流程图',
+    key: 'xmind',
+    show: true,
+    link: allPath.xmind.url
   }
 ]
 
@@ -29,23 +37,23 @@ const unLoginList = [
     content: '登录',
     key: 'login',
     show: true,
-    link: '/user/login'
+    link: allPath.login.url
   },
   {
     content: '注册',
     key: 'register',
     show: true,
-    link: '/user/register'
+    link: allPath.register.url
   }
 ]
 
 
 
 const Nav: React.FC<NavProps> = (props) => (
-  <nav className="home-nav">
+  <nav className="home-nav content-width">
     <ul className="home-nav-items">
       {
-        featureItems.map(item=>(
+        featureItems.map(item => (
           <li
             key={item.key}
             className="home-nav-items-item"

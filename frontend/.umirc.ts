@@ -1,4 +1,4 @@
-import { defineConfig, RequestConfig } from 'umi';
+import {defineConfig} from 'umi';
 import routers from "./config/routers";
 
 export default defineConfig({
@@ -12,6 +12,10 @@ export default defineConfig({
     dark: false,
     compact: true,
   },
+  alias: {
+    '@config': '/config',
+    '@public': '/public'
+  },
   theme: {
     'border-radius-base': '4px',
   },
@@ -19,7 +23,7 @@ export default defineConfig({
     '/api': {
       'target': 'http://localhost:3000',
       'changeOrigin': true,
-      'pathRewrite': { '^/api' : '' },
+      'pathRewrite': {'^/api': ''},
     },
   },
 });

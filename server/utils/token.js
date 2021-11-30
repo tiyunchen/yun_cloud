@@ -15,13 +15,26 @@ const getToken = (token) => new Promise((resolve, reject) => {
   if (!token) {
     resolve({});
   } else {
-    const info = jwt.verify(token.split(' ')[1], jwtSecret);
-    // console.log('token=', info);
-    resolve(info);
+    try {
+      const info = jwt.verify(token.split(' ')[1], jwtSecret);
+      // console.log('token=', info);
+      resolve(info);
+    } catch (err) {
+      resolve({});
+    }
   }
 });
+
+const getLoginUser = async (req) => {
+  if (!req) throw Error('入参非法');
+  const token = await getToken(req.headers.authorization);
+  const user = await req.$models.User.model.findOne({ _id: token._id });
+  console.log('user11', user._id);
+  return user;
+};
 
 module.exports = {
   generateToken,
   getToken,
+  getLoginUser,
 };

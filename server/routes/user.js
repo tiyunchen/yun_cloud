@@ -1,8 +1,8 @@
 const express = require('express');
 const { body, param } = require('express-validator');
-const userService = require('../service/service');
+const userService = require('../service/userService');
 const validate = require('../middleware/validate');
-const { getToken } = require('../utils/token');
+const { getToken, getLoginUser } = require('../utils/token');
 
 const userRouter = express.Router();
 
@@ -34,7 +34,7 @@ userRouter.post('/login',
  */
 userRouter.post('/refresh_token', async (req, res) => {
   const token = await getToken(req.headers.authorization);
-  const user = await req.$models.User.model.findOne({ _id: token._id });
+  const user = await getLoginUser(req);
   if (!user) {
     return res.status(401).send({ msg: '登入失效' });
   }

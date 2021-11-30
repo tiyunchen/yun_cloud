@@ -14,10 +14,6 @@ class Base {
       });
     });
   }
-
-  update(data) {
-    console.log('update', this);
-  }
 }
 
 module.exports = Base;

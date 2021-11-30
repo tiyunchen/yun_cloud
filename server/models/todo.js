@@ -10,7 +10,7 @@ const todoSchema = new Schema({
   }, // 标题
   endTime: String, // 截止时间
   createTime: { type: Date, default: Date.now }, // 创建时间
-  updateTime: String, // 更新时间
+  updateTime: Date, // 更新时间
   remind: { type: Boolean, default: false }, // 是否提醒
   finished: { type: Boolean, default: false }, // 是否完成
   author: {
@@ -27,6 +27,16 @@ class TodoModel extends Base {
 
   async findOne(payload = {}) {
     return this.model.findOne(payload)
+      .populate('author', 'username email');
+  }
+
+  async findOneAndUpdate(filter = {}, payload = {}) {
+    return this.model.findOneAndUpdate(filter,
+      {
+        ...payload,
+        updateTime: new Date(),
+      },
+      { new: true })
       .populate('author', 'username email');
   }
 }

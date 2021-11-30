@@ -36,13 +36,14 @@ app.all('*', (req, res, next) => {
 
 app.use(model);
 
-app.use('/', routers);
 app.use(expressJwt({
   secret: config.jwtSecret,
   algorithms: ['HS256'],
 }).unless({
   path: config.jwtUnless,
 }));
+
+app.use('/', routers);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -29,7 +29,6 @@ const getLoginUser = async (req) => {
   if (!req) throw Error('入参非法');
   const token = await getToken(req.headers.authorization);
   const user = await req.$models.User.model.findOne({ _id: token._id });
-  console.log('user11', user._id);
   return user;
 };
 

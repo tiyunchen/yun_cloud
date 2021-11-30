@@ -7,13 +7,15 @@ export interface IndexProps {
   onOpenChange: (open: boolean) => void;
   getPopupContainer: () => any;
   onChange: (date: Moment | null, value: string) => void
+  time?: string,
 }
 
 const Index: React.FC<IndexProps> = (
   {
     onOpenChange,
     getPopupContainer,
-    onChange
+    onChange,
+    time
   }) => {
 
   function range(start: number, end: number) {
@@ -50,6 +52,7 @@ const Index: React.FC<IndexProps> = (
       onChange={(date, value) => {
         onChange && onChange(date, value)
       }}
+      defaultValue={time ? moment(time) : undefined}
     >添加截止日期</DatePicker>
   )
 };

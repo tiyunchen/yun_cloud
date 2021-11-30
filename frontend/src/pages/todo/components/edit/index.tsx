@@ -1,7 +1,8 @@
 import type {ChangeEvent} from 'react'
 import React, {useEffect, useRef, useState} from 'react';
-import {Input} from 'antd'
-import {PlusOutlined} from '@ant-design/icons'
+import {Input, Button, Switch, message} from 'antd'
+import {PlusOutlined, CheckOutlined } from '@ant-design/icons'
+import todoService from '@/apis/todo'
 import DatePicker from './DatePicker'
 import './index.less'
 
@@ -11,7 +12,9 @@ export interface IndexProps {
 
 const Index: React.FC<IndexProps> = ({active}) => {
   const [inputActive, setActive] = useState(active)
+  const [time, setTime] = useState('')
   const [value, setValue] = useState('')
+  const [remind, setChecked] = useState(false)
   const inputEl = useRef<Input>(null)
   const wrapEl = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -47,18 +50,34 @@ const Index: React.FC<IndexProps> = ({active}) => {
   }
 
 
-  function onBlur() {
-    setActive(false)
-  }
 
   function onChange(e: ChangeEvent<HTMLInputElement>) {
-    console.log('1', e.target.value)
+    if(e.target.value.length > 500) return
     setValue(e.target.value)
   }
 
   function onOpenChange(open: boolean) {
     console.log('open', open)
     onFocus()
+  }
+
+  async function onConfirm(){
+    console.log('onConfirm')
+    const res = await todoService.createTodoApi({
+      title: value,
+      endTime: time,
+      remind: remind
+    }, {
+      showLoading: true,
+    })
+    console.log('创建结果', res)
+  }
+
+  function onSwitch(checkedValue: boolean){
+    if(checkedValue){
+      message.info('将在截止时间15分钟前提醒您')
+    }
+    setChecked(checkedValue)
   }
 
   // console.log('inputActive', value)
@@ -81,8 +100,27 @@ const Index: React.FC<IndexProps> = ({active}) => {
         <DatePicker
           onOpenChange={onOpenChange}
           getPopupContainer={() => wrapEl.current}
-          onChange={(date, time) => console.log('da', date, time)}
+          onChange={(date, valueTime) => setTime(valueTime)}
+          time={time}
         />
+        <span className="ml-16">
+          <Switch
+            checkedChildren="提醒开启"
+            onChange={(checkedV)=>onSwitch(checkedV)}
+            checked={remind}
+            unCheckedChildren="提醒我"
+            className="ml-16"
+          />
+        </span>
+        <Button
+          icon={<CheckOutlined />}
+          onClick={()=>onConfirm()}
+          type="primary"
+          style={{
+            float: 'right'
+          }}
+          disabled={!value}
+        >新建待办</Button>
       </div>
     </div>
   )

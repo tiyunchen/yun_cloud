@@ -13,6 +13,7 @@ const todoSchema = new Schema({
   updateTime: Date, // 更新时间
   remind: { type: Boolean, default: false }, // 是否提醒
   finished: { type: Boolean, default: false }, // 是否完成
+  deleted: { type: Boolean, default: false },
   author: {
     type: Schema.Types.ObjectId, ref: 'user',
   },
@@ -27,6 +28,14 @@ class TodoModel extends Base {
 
   async findOne(payload = {}) {
     return this.model.findOne(payload)
+      .populate('author', 'username email');
+  }
+
+  async find(filter = {}) {
+    return this.model.find({
+      ...filter,
+      deleted: false,
+    })
       .populate('author', 'username email');
   }
 

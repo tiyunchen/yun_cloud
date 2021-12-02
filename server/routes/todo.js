@@ -39,6 +39,26 @@ todoRouter.put('/update',
     res.send({ result: true, data });
   });
 
+// 删除待办---- 只是软删除
+todoRouter.put('/delete',
+  body('_id').exists(),
+  body('author').isObject().withMessage('需要对象'),
+  validate,
+  async (req, res) => {
+    const payload = req.body;
+    if (req.user._id !== payload.author._id) {
+      res.status(500).send({ result: false, msg: '无权限' });
+      return;
+    }
+    delete payload.author;
+    const data = await req.$models.Todo.findOneAndUpdate(
+      { _id: payload._id },
+      { deleted: true },
+    );
+
+    res.send({ result: true, data });
+  });
+
 // 查询待办数据
 todoRouter.get('/user_list', async (req, res) => {
   const payload = req.query;
@@ -48,11 +68,7 @@ todoRouter.get('/user_list', async (req, res) => {
   // 查询数据库数据
   if (payload.query) filter.title = { $in: payload.query };
   if (req.user) filter.author = req.user._id;
-  const dataList = await req.$models.Todo.model.find({
-    ...filter,
-  })
-    .populate('author', 'username email');
-
+  const dataList = await req.$models.Todo.find(filter);
   res.send({ result: true, data: dataList });
 });
 

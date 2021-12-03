@@ -1,14 +1,18 @@
 import type {ChangeEvent} from 'react'
 import React, {useEffect, useRef, useState} from 'react';
-import {Input, Button, Switch, message} from 'antd'
-import {PlusOutlined, CheckOutlined } from '@ant-design/icons'
+import {Button, Input, message, Switch} from 'antd'
+import {CheckOutlined, PlusOutlined} from '@ant-design/icons'
 import todoService from '@/apis/todo'
 import DatePicker from './DatePicker'
+import LoginHoc from "@/components/LoginHoc";
 import './index.less'
 
 export interface IndexProps {
   active?: boolean; // 是否激活
 }
+
+const CreateBtn = LoginHoc(Button)
+
 
 const Index: React.FC<IndexProps> = ({active}) => {
   const [inputActive, setActive] = useState(active)
@@ -106,21 +110,21 @@ const Index: React.FC<IndexProps> = ({active}) => {
         <span className="ml-16">
           <Switch
             checkedChildren="提醒开启"
-            onChange={(checkedV)=>onSwitch(checkedV)}
+            onChange={(checkedV) => onSwitch(checkedV)}
             checked={remind}
             unCheckedChildren="提醒我"
             className="ml-16"
           />
         </span>
-        <Button
-          icon={<CheckOutlined />}
-          onClick={()=>onConfirm()}
-          type="primary"
-          style={{
-            float: 'right'
-          }}
-          disabled={!value}
-        >新建待办</Button>
+        <CreateBtn icon={<CheckOutlined/>}
+                   onClick={() => onConfirm()}
+                   type="primary"
+                   style={{
+                     float: 'right'
+                   }}
+                   disabled={!value}>
+          新建待办
+        </CreateBtn>
       </div>
     </div>
   )

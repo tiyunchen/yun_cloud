@@ -1,19 +1,27 @@
 import React, {useEffect} from 'react'
 import type {HttpResponseProps, LoginProps} from '@/utils/types'
-import type { IndexModelState, ConnectProps, UserInfoProps, Dispatch} from 'umi'
-import { Form, Input, Button} from 'antd'
+import type H from 'history';
+import type {ConnectProps, Dispatch, IndexModelState, UserInfoProps} from 'umi'
 import {connect, Link} from 'umi'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import {Button, Form, Input} from 'antd'
+import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import userService from '@/apis/user'
 import './index.less'
 
-interface LoginPageProps extends ConnectProps  {
-  app: IndexModelState,
-  dispatch: Dispatch
+
+interface Location extends H.Location {
+  query: Record<string, string>;
 }
+
+interface LoginPageProps extends ConnectProps {
+  app: IndexModelState,
+  dispatch: Dispatch,
+  location: Location
+}
+
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: {span: 8},
+  wrapperCol: {span: 16},
 };
 
 const tailLayout = {
@@ -32,13 +40,19 @@ const  LoginPage: React.FC<LoginPageProps> = (props)  => {
         showLoading: true
       }
     ).then((res: HttpResponseProps<UserInfoProps>)=>{
-      if(res.result){
+      if(res.result) {
         props.dispatch({
           type: 'app/save',
           payload: {
             userInfo: res.data
           }
         })
+
+        // 有redirectUrl 就replace他
+        if (props.location.query.redirectUrl) {
+          props.history.replace(props.location.query.redirectUrl)
+          return
+        }
         props.history.push('/')
       }
     }).catch(err=>{

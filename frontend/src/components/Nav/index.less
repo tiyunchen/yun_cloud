@@ -3,23 +3,27 @@
   margin: 0 auto;
   justify-content: space-between;
   align-items: center;
-  &-items {
-    display: flex;
-    &-item{
-      margin-right: 16px;
-      font-size: 14px;
+}
 
-      &-default {
-        padding: 8px 10px;
-        color: black;
-        display: inline-block;
-      }
-      &-default:hover {
-        color: @blue-base;
-      }
-      &-active {
-        color: @blue-base;
-      }
+.home-nav-items {
+  display: flex;
+
+  &-item {
+    margin-right: 16px;
+    font-size: 14px;
+
+    &-default {
+      padding: 8px 10px;
+      color: black;
+      display: inline-block;
+    }
+
+    &-default:hover {
+      color: @blue-base;
+    }
+
+    &-active {
+      color: @blue-base;
     }
   }
 }

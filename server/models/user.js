@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const { Schema } = mongoose;
 const Base = require('./base');
@@ -21,6 +22,13 @@ const userSchema = new Schema({
   token: String,
 }, { versionKey: false });
 
+// 给分页设一些默认值
+mongoosePaginate.paginate.options = {
+  lean: true,
+  limit: 15,
+};
+userSchema.plugin(mongoosePaginate);
+
 class UserModel extends Base {
   constructor() {
     super();
@@ -39,6 +47,15 @@ class UserModel extends Base {
     //         return Promise.resolve()
     //     }
     // })
+  }
+
+  async find(filter = {}, config = {}) {
+    return this.model.paginate({
+      ...filter,
+      deleted: false,
+    }, {
+      ...config,
+    });
   }
 }
 

@@ -1,4 +1,11 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
+
+// 给分页设一些默认值
+mongoosePaginate.paginate.options = {
+  lean: true,
+  limit: 15,
+};
 
 const { Schema } = mongoose;
 const Base = require('./base');
@@ -20,6 +27,9 @@ const todoSchema = new Schema({
 
 }, { versionKey: false });
 
+// 导入分页插件
+todoSchema.plugin(mongoosePaginate);
+
 class TodoModel extends Base {
   constructor(props) {
     super(props);
@@ -31,12 +41,18 @@ class TodoModel extends Base {
       .populate('author', 'username email');
   }
 
-  async find(filter = {}) {
-    return this.model.find({
+  async find(filter = {}, config = {}) {
+    return this.model.paginate({
       ...filter,
       deleted: false,
-    })
-      .populate('author', 'username email');
+    }, {
+      ...config,
+      populate: {
+        path: 'author',
+        select: 'username email',
+        model: 'user',
+      },
+    });
   }
 
   async findOneAndUpdate(filter = {}, payload = {}) {

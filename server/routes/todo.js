@@ -60,16 +60,17 @@ todoRouter.put('/delete',
   });
 
 // 查询待办数据
-todoRouter.get('/user_list', async (req, res) => {
+todoRouter.get('/list', async (req, res) => {
   const payload = req.query;
   // const user = await getLoginUser(req);
   const filter = {};
 
   // 查询数据库数据
-  if (payload.query) filter.title = { $in: payload.query };
+  const reg = new RegExp(payload.query, 'i');
+  filter.title = { $regex: reg };
   if (req.user) filter.author = req.user._id;
   const dataList = await req.$models.Todo.find(filter);
-  res.send({ result: true, data: dataList });
+  res.send({ result: true, ...dataList });
 });
 
 module.exports = todoRouter;

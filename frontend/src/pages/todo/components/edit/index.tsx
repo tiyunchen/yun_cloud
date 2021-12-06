@@ -73,6 +73,7 @@ const Index: React.FC<IndexProps> = ({active}) => {
       remind: remind
     }, {
       showLoading: true,
+      successMsg: '待办创建成功'
     })
     console.log('创建结果', res)
   }

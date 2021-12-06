@@ -1,5 +1,6 @@
-import type { Effect, Reducer, Subscription} from 'umi'
+import type {Effect, Reducer, Subscription} from 'umi'
 import userService from '@/apis/user'
+
 // import { ImmerReducer } from 'umi'
 
 export interface UserInfoProps {
@@ -43,7 +44,6 @@ const IndexModel: IndexModelType = {
     // 刷新用户状态
     *refreshToken({  }, {call, put}){
       const res = yield call(userService.refreshTokenApi)
-      console.log('刷新用户状态',res)
       yield put({
         type: 'save',
         payload: {
@@ -73,11 +73,6 @@ const IndexModel: IndexModelType = {
             type: 'refreshToken',
           })
         }
-
-        // console.log('pathname', pathname)
-        // if (pathname === '/') {
-
-        // }
       })
     },
   },

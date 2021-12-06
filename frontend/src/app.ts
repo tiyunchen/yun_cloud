@@ -1,4 +1,4 @@
-import type { RequestConfig } from 'umi';
+import type {RequestConfig} from 'umi';
 
 // 请求错误配置
 export const request: RequestConfig = {
@@ -8,7 +8,7 @@ export const request: RequestConfig = {
   responseInterceptors: [],
   errorConfig: {
     adaptor: (resData) => {
-      console.log('resData', resData)
+      // console.log('resData', resData)
       return {
         ...resData,
         errorMessage: resData.msg,

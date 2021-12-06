@@ -1,6 +1,6 @@
 import {request} from 'umi'
 import {message} from 'antd'
-import type {HttpResponseProps, ConfigProps} from '@/utils/types'
+import type {ConfigProps, HttpResponseProps} from '@/utils/types'
 
 import * as _ from 'lodash'
 
@@ -53,11 +53,14 @@ function yunRequest(url: string,option: RequestIProps): Promise<any>{
  * @param data
  * @param config
  */
-function processErrorMsg(data: HttpResponseProps<any>, config: ConfigProps){
-  if(!data.result) {
-    if(!config.isHideError){
+function processErrorMsg(data: HttpResponseProps<any>, config: ConfigProps) {
+  if (!data.result) {
+    if (!config.isHideError) {
       message.error(data.msg || config.errorMsg)
     }
+  }
+  if (data && data.result && config.successMsg) {
+    message.success(config.successMsg)
   }
   console.log('dada', data, config)
 

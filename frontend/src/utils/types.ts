@@ -1,5 +1,5 @@
 // import { History, Location } from 'history-with-query'
-import type {IRouteProps, History, Location} from 'umi'
+import type {History, IRouteProps, Location} from 'umi'
 
 
 export interface ConfigProps {
@@ -7,6 +7,7 @@ export interface ConfigProps {
   loadingMsg?: string; // loading 文案
   isHideError?: boolean; // 是否展示错误文案
   errorMsg?: string; // 错误文案
+  successMsg?: string; // 成功文案
 }
 
 export interface HttpResponseProps<T> {

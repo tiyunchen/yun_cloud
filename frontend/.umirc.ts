@@ -1,6 +1,8 @@
 import {defineConfig} from 'umi';
 import routers from "./src/config/routers";
 
+const path = require('path')
+
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
@@ -13,11 +15,23 @@ export default defineConfig({
     compact: true,
   },
   alias: {
-    '@config': '/config',
     '@public': '/public'
   },
   theme: {
     'border-radius-base': '4px',
+  },
+  chainWebpack(config) {
+    config.module.rule('less')
+      .test(/\.less$/)
+      .oneOf('css')
+      .use('sass-resources-loader')
+      .loader('sass-resources-loader')
+      .options({
+        resources: [
+          path.resolve(__dirname, './src/styles/index.less'),// 全局样式
+        ],
+      })
+      .end();
   },
   proxy: {
     '/api': {

@@ -6,6 +6,7 @@ import './index.less'
 import Nav from "@/components/Nav"
 import Home from '@/pages/home/index'
 
+
 interface IndexProps extends ConnectProps {
   app: IndexModelState,
 }

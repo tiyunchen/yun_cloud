@@ -5,7 +5,7 @@ import {connect} from "umi";
 import type {TodoProps} from '@/utils/types'
 import TodoEdit from '../edit/index'
 import todoApi from '@/apis/todo'
-import TodoItem from '@/pages/todo/components/TodoItem'
+import TodoItem from '@/pages/todo/components/todo-item'
 // @ts-ignore
 import emptyImg from '@public/todo/20211126103908.jpg'
 

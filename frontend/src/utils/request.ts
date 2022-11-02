@@ -1,70 +1,61 @@
-import {request} from 'umi'
-import {message} from 'antd'
-import type {ConfigProps, HttpResponseProps} from '@/utils/types'
-
-import * as _ from 'lodash'
-
-interface RequestIProps {
-  data?: any,
-  methods?: 'post' | 'get' | 'put',
-  config?: ConfigProps;
-  [key: string]: any;
+import { request } from '@umijs/max';
+import {message, MessageArgsProps} from 'antd'
+type IOption = {
+    loading?: boolean | string,
+    errMsg?: boolean | string,
+    successMsg?: string
 }
-
-
-
-/**
- * 统一的请求配置
- * @param url
- * @param option
- */
-function yunRequest(url: string,option: RequestIProps): Promise<any>{
-  const token = localStorage.getItem('token')
-  if(token){
-    _.set(option, 'headers.authorization', token)
-  }
-  const config = option.config || {}
-  delete option.config
-  _.set(option, 'getResponse', true)
-  let hide: any = null
-  console.log('config', config)
-  if(config.showLoading){
-    hide = message.loading(config.loadingMsg || '加载中', 0)
-  }
-  return new Promise((resolve) => {
-    request(url, option).then(res=>{
-      const resToken = res.response.headers.get('authorization')
-      if(resToken) localStorage.setItem('token', resToken)
-      processErrorMsg(res.data, config)
-      // 关闭loading
-      if(hide) hide()
-      resolve(res.data)
-    }).catch(err=>{
-      if(hide) hide()
-      // processErrorMsg(err, config)
-      console.log('2222', err.status)
-    })
-  })
+type IReq<P> = {
+    url: string,
+    body?: P,
+    option?: IOption
 }
-
-
-/**
- * 错误处理
- * @param data
- * @param config
- */
-function processErrorMsg(data: HttpResponseProps<any>, config: ConfigProps) {
-  if (!data.result) {
-    if (!config.isHideError) {
-      message.error(data.msg || config.errorMsg)
+type IRes<T> = {
+    result: boolean,
+    data: T,
+    msg?: string,
+    kind?: string
+}
+type IRequest = <T=any, P = {}>(req: IReq<P>) => Promise<IRes<T>>
+const yRequest:IRequest = ({url, body, option={}}) => {
+    let hide: any = null
+    if(option.loading){
+        hide = message.loading(typeof option.loading === 'string' ? option.loading : '加载中')
     }
-  }
-  if (data && data.result && config.successMsg) {
-    message.success(config.successMsg)
-  }
-  console.log('dada', data, config)
+    return new Promise((resolve, reject) => {
+        let apiUrl = url
+        if(apiUrl.startsWith('/')){
+            apiUrl = `/yun_service${url}`
+        }
+
+        let Authorization = `Bearer `
+        request(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': Authorization
+            },
+            data: body,
+            ...(option || {}),
+        }).then(res=>{
+            hide && hide()
+            errorHandle(res, option)
+            console.log('yRequest', res)
+            resolve(res)
+        })
+    })
 
 }
 
+// 请求错误处理
+const errorHandle = (res: IRes<any>, option: IOption) => {
+    if(res && !res.result){
+        switch (res.kind) {
+            case '600000':
+                res.msg && message.error(res.msg)
+        }
+    }
+}
 
-export default yunRequest
+
+export default yRequest

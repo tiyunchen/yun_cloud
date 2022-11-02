@@ -1,3 +1,3 @@
-const fabric = require('@umijs/fabric');
-
-module.exports = fabric.eslint;
+module.exports = {
+  extends: require.resolve('@umijs/max/eslint'),
+};

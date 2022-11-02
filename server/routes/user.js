@@ -19,13 +19,14 @@ userRouter.post('/login',
   body('password').exists(),
   validate,
   async (req, res) => {
-    const data = await req.$models.User.model.findOne(req.body);
+    let data = await req.$models.User.model.findOne(req.body);
     if (!data) {
-      res.status(200).send({ result: false, msg: '用户名或密码不一致' });
+      res.errMsg('用户名或密码不一致');
     } else {
-      delete data.password;
-      await userService.setToken(req, res, data);
-      res.send({ result: true, data });
+        let userInfo = Object.assign({}, data.toObject())
+        delete userInfo.password;
+        await userService.setToken(req, res, data);
+        res.send({ result: true, userInfo });
     }
   });
 
@@ -51,14 +52,14 @@ userRouter.post('/refresh_token', async (req, res) => {
 /**
  * 注册
  */
-userRouter.put('/register',
+userRouter.post('/register',
   body('username').exists(),
   body('password').exists(),
   body('email').isEmail(),
   validate,
   async (req, res) => {
     const usernameRepeat = await userService.checkNameExit(req, req.body.username);
-    if (usernameRepeat) return res.status(500).send({ msg: '用户名已存在' });
+    if (usernameRepeat) return res.errMsg('用户名已存在');
     const data = await req.$models.User.create(req.body);
     console.log('注册成功', data);
     res.send({ result: true, data });

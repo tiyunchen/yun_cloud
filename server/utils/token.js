@@ -11,6 +11,12 @@ const generateToken = (user) => new Promise((resolve, reject) => {
   resolve(token);
 });
 
+
+/**
+ * 获取token
+ * @param token
+ * @returns {Promise<unknown>}
+ */
 const getToken = (token) => new Promise((resolve, reject) => {
   if (!token) {
     resolve({});

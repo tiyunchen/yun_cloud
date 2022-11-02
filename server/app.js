@@ -9,6 +9,7 @@ const routers = require('./routes/index');
 const db = require('./utils/db');
 const config = require('./config');
 const model = require('./middleware/model');
+const errorStatus = require('./middleware/responseStatus')
 
 db.connect();
 
@@ -42,6 +43,8 @@ app.use(expressJwt({
 }).unless({
   path: config.jwtUnless,
 }));
+
+app.use(errorStatus)
 
 app.use('/', routers);
 

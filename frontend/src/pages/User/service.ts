@@ -1,7 +1,12 @@
 import yRequest from "@/utils/request";
 
-type UserInfo = {}
-type IUserRegister = {
+export type UserInfo = {
+    username:string,
+    token: string,
+    email: string,
+    _id: string
+}
+export type IUserRegister = {
     username?: string,
     password?: string,
     email?: string

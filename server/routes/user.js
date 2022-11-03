@@ -19,14 +19,14 @@ userRouter.post('/login',
   body('password').exists(),
   validate,
   async (req, res) => {
-    let data = await req.$models.User.model.findOne(req.body);
+    const data = await req.$models.User.model.findOne(req.body);
     if (!data) {
       res.errMsg('用户名或密码不一致');
     } else {
-        let userInfo = Object.assign({}, data.toObject())
-        delete userInfo.password;
-        await userService.setToken(req, res, data);
-        res.send({ result: true, userInfo });
+      const userInfo = { ...data.toObject() };
+      delete userInfo.password;
+      await userService.setToken(req, res, data);
+      res.send({ result: true, data: userInfo });
     }
   });
 

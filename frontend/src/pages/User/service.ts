@@ -22,10 +22,17 @@ export const userLogin = async (payload: IUserRegister) => {
         body: payload,
         option: {
             loading: '登入中',
-            successMsg: '登入成功'
+            successMsg: '登入成功',
         }})
     return res
 }
+
+
+export const refreshToken = async () => {
+    const res = await yRequest<UserInfo>({url:  '/user/refresh_token'})
+    return res
+}
+
 
 export default {
     userLogin,

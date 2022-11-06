@@ -1,7 +1,7 @@
 import React from 'react';
 import {history} from '@umijs/max'
 import { Button, Checkbox, Form, Input } from 'antd';
-import {useModel} from '@umijs/max'
+import {useModel, Link} from '@umijs/max'
 import userService from '../service'
 export interface LogonProps {
 
@@ -12,11 +12,8 @@ const Logon: React.FC<LogonProps> = () => {
         console.log('Success:', values);
         userService.userLogin(values).then(res=>{
             console.log('登入结果', res)
-
-            if(res.result) {
-                history.push('/')
-                userDispatch({type: 'login', payload: res.data})
-            }
+            history.push('/')
+            userDispatch({type: 'login', payload: res})
         })
     };
 
@@ -53,10 +50,11 @@ const Logon: React.FC<LogonProps> = () => {
             {/*    <Checkbox>Remember me</Checkbox>*/}
             {/*</Form.Item>*/}
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit">
+            <Form.Item wrapperCol={{offset: 8}}>
+                <Button type="primary" htmlType="submit" style={{width: '100%'}}>
                     登入
                 </Button>
+                <Link to="/user/register" >注册</Link>
             </Form.Item>
         </Form>
     )

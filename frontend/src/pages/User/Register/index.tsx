@@ -3,7 +3,6 @@ import {history, useModel} from "@@/exports";
 import userService, {userRegister} from "@/pages/User/service";
 import {Button, Form, Input} from "antd";
 import {Link} from '@umijs/max'
-import {all} from "@umijs/utils/compiled/deepmerge";
 export interface RegisterProps {
 
 }

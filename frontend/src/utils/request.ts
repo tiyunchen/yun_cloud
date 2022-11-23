@@ -7,8 +7,17 @@ const errorHandle = (res: IRes<any>, option: IOption) => {
     if(res && !res.result){
         switch (res.kind) {
             case '600000':
-                if(res.msg) message.error(res.msg).then()
+                if(res.msg) message.error(res.msg).then();return
+            default: !!(option.errMsg) && message.error(option.errMsg)
         }
+    }
+}
+
+// 成功处理
+const successHandle = (res: IRes<any>, option: IOption) => {
+    if(!res || !res.result) return
+    if(option.successMsg){
+        message.success(option.successMsg).then()
     }
 }
 
@@ -22,6 +31,7 @@ type IOption = {
 type IReq<P> = {
     url: string,
     body?: P,
+    method?: 'post' | 'put' | 'get' | 'delete'
     option?: IOption
 }
 export type IRes<T> = {
@@ -31,8 +41,12 @@ export type IRes<T> = {
     kind?: string
 }
 
-type IRequest = <T=any, P = any>(req: IReq<P>) => Promise<T>
-const yRequest:IRequest = ({url, body, option={}}) => {
+
+// @ts-ignore
+function yRequest<T=any, P = any>(req:IReq<P>):Promise<T>
+function yRequest<T=any, P = any>(req:IReq<P>, showResStatus: true):Promise<IRes<T>>
+function yRequest<T=any, P = any>(req:IReq<P>, showResStatus: boolean){
+    const {url, body, option={}, method='post'} = req
     let hide: any = null
     if(option.loading){
         hide = message.loading(typeof option.loading === 'string' ? option.loading : '加载中')
@@ -51,19 +65,24 @@ const yRequest:IRequest = ({url, body, option={}}) => {
             Authorization += token
         }
         request(apiUrl, {
-            method: 'POST',
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': Authorization
             },
             data: body,
             ...(option || {}),
-        }).then((res: IRes<any>)=>{
+        }).then((res)=>{
             if(hide) hide()
+
+            // 失败消息处理
             errorHandle(res, option)
+
+            // 成功消息处理
+            successHandle(res, option)
             console.log('yRequest', res)
             // 默认直接返回全部结果
-            if(!option.returnData){
+            if(!showResStatus){
                 if(res && res.result){
                     resolve(res.data)
                 } else {

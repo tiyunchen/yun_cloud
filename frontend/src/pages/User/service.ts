@@ -12,7 +12,10 @@ export type IUserRegister = {
     email?: string
 }
 export const userRegister = async (payload: IUserRegister) => {
-    const res = await yRequest<UserInfo>({url: '/user/register', body: payload})
+    const res = await yRequest<UserInfo>({
+        url: '/user/register',
+        body: payload,
+    })
     console.log('res', res)
     return res
 }

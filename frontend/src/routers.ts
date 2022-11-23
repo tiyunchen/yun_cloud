@@ -33,4 +33,9 @@ export default [
             }
         ]
     },
+    {
+        name: '待办',
+        path: '/todo',
+        component: './Todo',
+    }
 ]

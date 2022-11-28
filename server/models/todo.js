@@ -57,6 +57,7 @@ class TodoModel extends Base {
         select: 'username email',
         model: 'user',
       },
+      select: '-deleted',
     });
   }
 

@@ -9,13 +9,20 @@ const todoRouter = express.Router();
 // 创建 待办事项
 todoRouter.post('/create',
   body('title').exists(),
+  body('endTime').exists(),
   validate,
   async (req, res) => {
     const payload = req.body;
     const user = await getLoginUser(req);
     payload.author = user._id;
-    const data = await todoService.createTodo(req, res, payload);
-    res.send({ result: true, data });
+    console.log('payload', payload);
+    try {
+      const data = await todoService.createTodo(req, res, payload);
+      res.send({ result: true, data });
+    } catch (e) {
+      console.error(e);
+      res.errMsg('创建失败');
+    }
   });
 
 // 更新待办
@@ -69,8 +76,12 @@ todoRouter.get('/list', async (req, res) => {
   const reg = new RegExp(payload.query, 'i');
   filter.title = { $regex: reg };
   if (req.user) filter.author = req.user._id;
-  const dataList = await req.$models.Todo.find(filter);
-  res.send({ result: true, ...dataList });
+  const option = {
+    page: payload.page,
+    size: payload.size,
+  };
+  const dataList = await req.$models.Todo.find(filter, option);
+  res.send({ result: true, data: dataList });
 });
 
 module.exports = todoRouter;

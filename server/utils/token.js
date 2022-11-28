@@ -11,7 +11,6 @@ const generateToken = (user) => new Promise((resolve, reject) => {
   resolve(token);
 });
 
-
 /**
  * 获取token
  * @param token

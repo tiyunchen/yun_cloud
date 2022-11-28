@@ -4,7 +4,11 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 // 给分页设一些默认值
 mongoosePaginate.paginate.options = {
   lean: true,
-  limit: 15,
+  customLabels: {
+    totalDocs: 'totalCount',
+    docs: 'list',
+    limit: 'size',
+  },
 };
 
 const { Schema } = mongoose;
@@ -15,7 +19,7 @@ const todoSchema = new Schema({
     type: String,
     required: true,
   }, // 标题
-  endTime: String, // 截止时间
+  endTime: Date, // 截止时间
   createTime: { type: Date, default: Date.now }, // 创建时间
   updateTime: Date, // 更新时间
   remind: { type: Boolean, default: false }, // 是否提醒
@@ -47,6 +51,7 @@ class TodoModel extends Base {
       deleted: false,
     }, {
       ...config,
+      limit: config.size || 15,
       populate: {
         path: 'author',
         select: 'username email',

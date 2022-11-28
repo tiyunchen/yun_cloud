@@ -26,13 +26,28 @@ const todoCreate = (payload:TODO.CREATE_PAYLOAD) =>{
     return yRequest<TODO.IData>({
         url: '/todo/create',
         body: payload,
-    }, true)
+        option: {
+            successMsg: '已成功添加待办'
+        }
+    })
+}
+
+/**
+ * 获取待办列表
+ * @param payload
+ */
+const getTodoList = (payload: FETCH_PAYLOAD) =>{
+    return yRequest<FETCH_LIST<TODO.IData>>({
+        url: '/todo/list',
+        body: payload,
+        method: 'get'
+    })
 }
 
 
 
-
 export default {
-    todoCreate
+    todoCreate,
+    getTodoList
 }
 

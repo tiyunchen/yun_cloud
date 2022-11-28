@@ -1,5 +1,9 @@
 import { request } from '@umijs/max';
+import qs from 'query-string'
 import {message} from 'antd'
+import {history} from '@umijs/max'
+import * as _ from 'lodash'
+import {routePath} from "@/routers";
 
 
 // 请求错误处理
@@ -64,6 +68,9 @@ function yRequest<T=any, P = any>(req:IReq<P>, showResStatus: boolean){
         if(token){
             Authorization += token
         }
+        if(method === 'get'){
+            apiUrl = qs.stringifyUrl({url: apiUrl, query: {...(body || {})}})
+        }
         request(apiUrl, {
             method: method,
             headers: {
@@ -93,6 +100,11 @@ function yRequest<T=any, P = any>(req:IReq<P>, showResStatus: boolean){
                 resolve(res)
             }
         }).catch(err=>{
+            console.log('的点点滴滴', err, url)
+            if(_.get(err,'response.status') === 401 && url !== '/user/refresh_token' ){
+                message.error('用户未登录，请先登录')
+                history.push(`${routePath.login}?redirect=${location.href}`)
+            }
             reject(err)
         })
     })

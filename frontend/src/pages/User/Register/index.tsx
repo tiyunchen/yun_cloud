@@ -1,12 +1,14 @@
 import React, {useEffect} from 'react';
-import {history, useModel} from "@@/exports";
+import {history, useModel, useSearchParams} from "@@/exports";
 import userService, {userRegister} from "@/pages/User/service";
 import {Button, Form, Input} from "antd";
 import {Link} from '@umijs/max'
+import {routePath} from "@/routers";
 export interface RegisterProps {
 
 }
 const Register: React.FC<RegisterProps> = () => {
+    const [query] = useSearchParams()
     const {userDispatch, userInfo} = useModel('global')
     console.log('userInfo', userInfo)
     useEffect(()=>{
@@ -19,14 +21,21 @@ const Register: React.FC<RegisterProps> = () => {
         console.log('Success:', values);
         userService.userRegister(values).then(res=>{
             console.log('注册结果', res)
-            history.push('/')
+            let redirect = query.get('redirect')
             userDispatch({type: 'login', payload: res})
+            if(redirect){
+                location.href = redirect
+            } else {
+                history.push('/')
+            }
         })
     };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
+
+    console.log('queryqueryquery', query)
     return (
         <Form
             name="basic"
@@ -96,7 +105,7 @@ const Register: React.FC<RegisterProps> = () => {
                 <Button type="primary" htmlType="submit" style={{width: '100%'}}>
                     注册
                 </Button>
-                <Link to="/user/login">登入</Link>
+                <Link to={`${routePath.login}?redirect=${query.get('redirect')}`}>登入</Link>
             </Form.Item>
         </Form>
     )

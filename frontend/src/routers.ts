@@ -1,6 +1,13 @@
+export const routePath = {
+    home: '/',
+    login: '/user/login',
+    register: '/user/register',
+    todo: '/todo'
+}
+
 export default [
     {
-        path: '/',
+        path: routePath.home,
         redirect: '/home',
     },
     {
@@ -24,18 +31,18 @@ export default [
         component: './User',
         routes: [
             {
-                path: '/user/login',
+                path: routePath.login,
                 component: './User/Login'
             },
             {
-                path: '/user/register',
+                path: routePath.register,
                 component: './User/Register'
             }
         ]
     },
     {
         name: '待办',
-        path: '/todo',
+        path: routePath.todo,
         component: './Todo',
     }
 ]
